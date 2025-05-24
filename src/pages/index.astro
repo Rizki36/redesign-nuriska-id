@@ -3,35 +3,33 @@ import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection } from 'astro:content';
 import "../styles/global.css";
 
-// Sample news data - in real implementation this would come from CMS
-const latestNews = [
-  {
-    id: 1,
-    title: "Penerimaan Siswa Baru Tahun Ajaran 2025/2026",
-    excerpt: "Pondok Pesantren Nurul Islam membuka pendaftaran siswa baru untuk semua jenjang pendidikan...",
-    date: "2025-05-20",
-    image: "/images/news-1.jpg",
-    category: "Pengumuman"
-  },
-  {
-    id: 2,
-    title: "Kegiatan Peringatan Hari Santri Nasional 2025",
-    excerpt: "Seluruh santri dan santriwati mengikuti serangkaian kegiatan memperingati Hari Santri...",
-    date: "2025-05-18",
-    image: "/images/news-2.jpg",
-    category: "Berita"
-  },
-  {
-    id: 3,
-    title: "Prestasi Siswa dalam Kompetisi Sains Madrasah",
-    excerpt: "Tim siswa MA Nurul Islam meraih juara pertama dalam kompetisi sains tingkat provinsi...",
-    date: "2025-05-15",
-    image: "/images/news-3.jpg",
-    category: "Prestasi"
-  }
-];
+// Fetch news from content collection
+const allNewsEntries = await getCollection('news');
+
+// Sort by publication date (newest first) and take the latest 3
+const latestNews = allNewsEntries
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+// Format dates for display
+const formatDate = (date: Date): string => {
+  return new Intl.DateTimeFormat('id-ID', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(date);
+};
+
+// Map category IDs to display names
+const categoryNames = {
+  pengumuman: "Pengumuman",
+  akademik: "Akademik", 
+  kegiatan: "Kegiatan",
+  prestasi: "Prestasi"
+};
 
 const educationalPrograms = [
   { name: "TPQ", description: "Taman Pendidikan Al-Quran", icon: "📖" },
@@ -53,6 +51,7 @@ const educationalPrograms = [
     
     <!-- Hero Section -->
     <section class="relative bg-green-900 text-white">
+      <!-- Hero content remains unchanged -->
       <div class="container mx-auto px-4">
         <div class="flex flex-col lg:flex-row">
           <!-- Left content -->
@@ -84,7 +83,7 @@ const educationalPrograms = [
       </div>
     </section>
 
-    <!-- Quick Stats -->
+    <!-- Quick Stats Section remains unchanged -->
     <section class="py-16 bg-gray-50">
       <div class="container mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
@@ -108,7 +107,7 @@ const educationalPrograms = [
       </div>
     </section>
 
-    <!-- Educational Programs -->
+    <!-- Educational Programs Section remains unchanged -->
     <section class="py-20">
       <div class="container mx-auto px-4 lg:px-8">
         <div class="text-center mb-16">
@@ -130,7 +129,7 @@ const educationalPrograms = [
       </div>
     </section>
 
-    <!-- Latest News -->
+    <!-- Latest News - Updated to use content collection -->
     <section class="py-20 bg-gray-50">
       <div class="container mx-auto px-4 lg:px-8">
         <div class="text-center mb-16">
@@ -142,21 +141,21 @@ const educationalPrograms = [
           {latestNews.map((news) => (
             <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
               <img 
-                src={news.image} 
-                alt={news.title} 
+                src={news.data.image} 
+                alt={news.data.title} 
                 class="w-full h-48 object-cover"
                 onerror="this.onerror=null; this.src=`https://placehold.co/600x400/009688/FFFFFF?text=${encodeURIComponent(this.alt)}`;this.classList.add('placeholder-img');"
               >
               <div class="p-6">
                 <div class="flex items-center justify-between mb-3">
                   <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
-                    {news.category}
+                    {categoryNames[news.data.category as keyof typeof categoryNames]}
                   </span>
-                  <time class="text-gray-500 text-sm">{news.date}</time>
+                  <time class="text-gray-500 text-sm">{formatDate(news.data.pubDate)}</time>
                 </div>
-                <h3 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">{news.title}</h3>
-                <p class="text-gray-600 mb-4 line-clamp-3">{news.excerpt}</p>
-                <a href={`/berita/${news.id}`} class="text-green-600 font-semibold hover:text-green-700 transition-colors">
+                <h3 class="text-xl font-bold text-gray-800 mb-3 line-clamp-2">{news.data.title}</h3>
+                <p class="text-gray-600 mb-4 line-clamp-3">{news.data.excerpt}</p>
+                <a href={`/berita/${news.data.slug}`} class="text-green-600 font-semibold hover:text-green-700 transition-colors">
                   Baca Selengkapnya →
                 </a>
               </div>

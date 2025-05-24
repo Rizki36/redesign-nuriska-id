@@ -1,0 +1,244 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE } from '../../consts';
+import { getCollection } from 'astro:content';
+import "../../styles/global.css";
+
+// Fetch all news entries
+const allNewsEntries = await getCollection('news');
+
+// Sort by publication date (newest first)
+const allNews = allNewsEntries.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// Define categories
+const categories = [
+  { id: "pengumuman", name: "Pengumuman", color: "blue" },
+  { id: "akademik", name: "Akademik", color: "green" },
+  { id: "kegiatan", name: "Kegiatan", color: "yellow" },
+  { id: "prestasi", name: "Prestasi", color: "red" },
+];
+
+const { searchParams } = Astro.url;
+const category = searchParams.get('category');
+
+const filteredNews = category 
+  ? allNews.filter(news => news.data.category === category)
+  : allNews;
+
+// Format dates
+const formatDate = (date: Date): string => {
+  return new Intl.DateTimeFormat('id-ID', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(date);
+};
+
+// Color mapping for category badges
+const getCategoryColor = (categoryId: string): string => {
+  const foundCategory = categories.find(cat => cat.id === categoryId);
+  return foundCategory ? foundCategory.color : "gray";
+};
+
+const colorClasses = {
+  blue: "bg-blue-100 text-blue-700",
+  green: "bg-green-100 text-green-700",
+  yellow: "bg-yellow-100 text-yellow-700",
+  red: "bg-red-100 text-red-700",
+  gray: "bg-gray-100 text-gray-700"
+};
+
+const pageTitle = "Berita & Pengumuman | " + SITE_TITLE;
+const pageDescription = "Berita terbaru dan pengumuman dari Pondok Pesantren Nurul Islam";
+---
+
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <BaseHead title={pageTitle} description={pageDescription} />
+  </head>
+  <body class="bg-gray-50 text-gray-800 font-sans">
+    <Header />
+    
+    <!-- Hero Section -->
+    <section class="bg-green-900 text-white py-16">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <h1 class="text-4xl font-bold mb-4">Berita & Pengumuman</h1>
+          <p class="text-lg text-green-100">
+            Informasi terbaru seputar kegiatan, prestasi, dan pengumuman penting dari Pondok Pesantren Nurul Islam
+          </p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- News Content -->
+    <section class="py-12">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col lg:flex-row gap-8">
+          <!-- Sidebar -->
+          <div class="w-full lg:w-1/4">
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+              <h2 class="text-xl font-bold text-gray-800 mb-4">Kategori</h2>
+              <ul class="space-y-2">
+                <li>
+                  <a 
+                    href="/berita" 
+                    class={`block px-4 py-2 rounded-lg transition-colors ${!category ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100'}`}
+                  >
+                    Semua Berita
+                  </a>
+                </li>
+                {categories.map((cat) => (
+                  <li>
+                    <a 
+                      href={`/berita?category=${cat.id}`} 
+                      class={`block px-4 py-2 rounded-lg transition-colors ${category === cat.id ? `bg-${cat.color}-100 text-${cat.color}-700` : 'hover:bg-gray-100'}`}
+                    >
+                      {cat.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-md p-6">
+              <h2 class="text-xl font-bold text-gray-800 mb-4">Cari Berita</h2>
+              <form action="/berita/search" method="get">
+                <div class="relative">
+                  <input 
+                    type="text" 
+                    name="q" 
+                    placeholder="Kata kunci..." 
+                    class="w-full p-3 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  >
+                  <button 
+                    type="submit" 
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-green-600"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          
+          <!-- Main Content -->
+          <div class="w-full lg:w-3/4">
+            <!-- Category title if filtered -->
+            {category && (
+              <div class="mb-8 pb-4 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-800">
+                  Kategori: {categories.find(cat => cat.id === category)?.name || "Tidak diketahui"}
+                </h2>
+                <p class="text-gray-600">Menampilkan {filteredNews.length} artikel</p>
+              </div>
+            )}
+            
+            <!-- News Grid -->
+            {filteredNews.length > 0 ? (
+              <div class="grid md:grid-cols-2 gap-8">
+                {filteredNews.map((news) => (
+                  <article class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <img 
+                      src={news.data.image} 
+                      alt={news.data.title} 
+                      class="w-full h-48 object-cover"
+                      onerror="this.onerror=null; this.src=`https://placehold.co/600x400/009688/FFFFFF?text=${encodeURIComponent(this.alt)}`;this.classList.add('placeholder-img');"
+                    >
+                    <div class="p-6">
+                      <div class="flex justify-between items-center mb-3">
+                        <span class={`px-3 py-1 rounded-full text-sm font-medium ${colorClasses[getCategoryColor(news.data.category) as keyof typeof colorClasses]}`}>
+                          {categories.find(cat => cat.id === news.data.category)?.name || "Uncategorized"}
+                        </span>
+                        <time class="text-sm text-gray-500">{formatDate(news.data.pubDate)}</time>
+                      </div>
+                      <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
+                        <a href={`/berita/${news.data.slug}`} class="hover:text-green-600 transition-colors">
+                          {news.data.title}
+                        </a>
+                      </h3>
+                      <p class="text-gray-600 mb-4 line-clamp-3">{news.data.excerpt}</p>
+                      <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">Oleh: {news.data.author}</span>
+                        <a href={`/berita/${news.data.slug}`} class="text-green-600 font-medium hover:text-green-700 transition-colors inline-flex items-center">
+                          Baca Selengkapnya
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <div class="bg-white rounded-xl shadow-md p-8 text-center">
+                <div class="text-5xl mb-4">🔍</div>
+                <h3 class="text-xl font-bold text-gray-800 mb-2">Tidak Ada Berita</h3>
+                <p class="text-gray-600">Belum ada berita untuk kategori ini. Silakan pilih kategori lain atau kembali ke semua berita.</p>
+                <a href="/berita" class="mt-4 inline-block bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                  Lihat Semua Berita
+                </a>
+              </div>
+            )}
+            
+            <!-- Pagination -->
+            {filteredNews.length > 0 && (
+              <div class="mt-12 flex justify-center">
+                <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
+                  <a href="#" class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <span class="sr-only">Previous</span>
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                    </svg>
+                  </a>
+                  <a href="#" aria-current="page" class="relative inline-flex items-center px-4 py-2 border border-green-500 bg-green-50 text-sm font-medium text-green-600">
+                    1
+                  </a>
+                  <a href="#" class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    <span class="sr-only">Next</span>
+                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                    </svg>
+                  </a>
+                </nav>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Subscribe Section -->
+    <section class="py-16 bg-green-800 text-white">
+      <div class="container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center">
+          <h2 class="text-2xl font-bold mb-4">Dapatkan Update Berita Terbaru</h2>
+          <p class="mb-6 text-green-100">Berlangganan newsletter kami untuk mendapatkan informasi terkini seputar kegiatan dan pengumuman penting</p>
+          <form class="flex flex-col sm:flex-row gap-4 justify-center">
+            <input 
+              type="email" 
+              placeholder="Alamat Email Anda" 
+              class="px-4 py-3 rounded-lg flex-grow max-w-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+            <button 
+              type="submit" 
+              class="bg-green-600 hover:bg-green-700 px-6 py-3 rounded-lg font-medium transition-colors"
+            >
+              Berlangganan
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+    
+    <Footer />
+  </body>
+</html>

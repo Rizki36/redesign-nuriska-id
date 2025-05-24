@@ -1,0 +1,198 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+import "../styles/global.css";
+
+const pageTitle = "Tentang Kami | " + SITE_TITLE;
+const pageDescription = "Mengenal lebih dekat Pondok Pesantren Nurul Islam, visi misi dan sejarah kami";
+---
+
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <BaseHead title={pageTitle} description={pageDescription} />
+  </head>
+  <body class="bg-white text-gray-800 font-sans">
+    <Header />
+    
+    <!-- Hero Section -->
+    <section class="relative bg-green-900 text-white py-20">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto text-center">
+          <h1 class="text-4xl lg:text-5xl font-bold mb-6">Tentang Kami</h1>
+          <p class="text-lg lg:text-xl text-green-100">
+            Mengenal lebih dekat Pondok Pesantren Nurul Islam, sebuah institusi pendidikan Islam yang berdedikasi untuk membentuk generasi qurani
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vision & Mission -->
+    <section class="py-20">
+      <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+          <div class="bg-white shadow-xl rounded-2xl p-8 mb-16">
+            <div class="text-center mb-12">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 text-green-700 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="!h-8 !w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h2 class="text-3xl font-bold text-gray-800 mb-2">Visi</h2>
+            </div>
+            <div class="text-center">
+              <p class="text-xl font-medium text-green-700">
+                "Terwujudnya Santri yang Beriman, Berilmu dan Berakhlaqul Karimah"
+              </p>
+            </div>
+          </div>
+          
+          <div class="bg-white shadow-xl rounded-2xl p-8">
+            <div class="text-center mb-8">
+              <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 text-green-700 mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+              </div>
+              <h2 class="text-3xl font-bold text-gray-800 mb-2">Misi</h2>
+            </div>
+            <ul class="space-y-4">
+              <li class="flex">
+                <div class="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-green-100 text-green-700 mr-4">1</div>
+                <p class="text-gray-700 leading-relaxed pt-0.5">
+                  Menanamkan nilai-nilai keimanan dan ketaqwaan kepada Allah SWT.
+                </p>
+              </li>
+              <li class="flex">
+                <div class="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-green-100 text-green-700 mr-4">2</div>
+                <p class="text-gray-700 leading-relaxed pt-0.5">
+                  Mewujudkan suasana Islami yang berlandaskan paham Ahlus-Sunnah Wal-jamaah 'Alaa Thariqati Nahdlatil Ulama.
+                </p>
+              </li>
+              <li class="flex">
+                <div class="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-green-100 text-green-700 mr-4">3</div>
+                <p class="text-gray-700 leading-relaxed pt-0.5">
+                  Menanamkan nilai-nilai spritual, intelektual, emosional untuk menjadi manusia yang terampil, kreatif dan inovatif.
+                </p>
+              </li>
+              <li class="flex">
+                <div class="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-green-100 text-green-700 mr-4">4</div>
+                <p class="text-gray-700 leading-relaxed pt-0.5">
+                  Mewujudkan penguasaan sains, teknologi informatika dan komunikasi serta memperluas dan pengembangkan usaha bersama masyarakat.
+                </p>
+              </li>
+              <li class="flex">
+                <div class="flex-shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-green-100 text-green-700 mr-4">5</div>
+                <p class="text-gray-700 leading-relaxed pt-0.5">
+                  Menanamkan nilai-nilai pendidikan yang berorientasi pada lingkungan dan sosial kemasyarakatan.
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Video Profile -->
+    <section class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-3xl font-bold text-gray-800 mb-8">Profil Pondok Pesantren</h2>
+          
+          <div class="relative pb-[56.25%] h-0 rounded-2xl overflow-hidden shadow-xl">
+            <iframe 
+              class="absolute top-0 left-0 w-full h-full"
+              src="https://www.youtube.com/embed/EtQTwDbStWU" 
+              title="Profil Pondok Pesantren Nurul Islam"
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+            </iframe>
+          </div>
+          
+          <p class="mt-8 text-gray-600">
+            Video profil ini memberikan gambaran visual tentang kehidupan dan kegiatan di Pondok Pesantren Nurul Islam.
+          </p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- History Section -->
+    <section class="py-20">
+      <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-4xl mx-auto">
+          <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Sejarah Singkat</h2>
+          
+          <div class="prose prose-lg max-w-none">
+            <p>
+              Pondok Pesantren Nurul Islam didirikan pada tahun 2000 oleh para ulama dan tokoh masyarakat yang memiliki visi untuk memajukan pendidikan Islam. Berawal dari sebuah langgar kecil yang menyelenggarakan pengajian Al-Qur'an untuk anak-anak, pesantren ini perlahan berkembang menjadi institusi pendidikan Islam yang komprehensif.
+            </p>
+            
+            <p>
+              Sejak awal pendiriannya, Pondok Pesantren Nurul Islam berfokus pada integrasi antara ilmu agama dan ilmu umum. Kami meyakini bahwa pendidikan yang seimbang antara dunia dan akhirat akan melahirkan generasi yang tidak hanya memiliki ketahanan iman dan takwa, tetapi juga mampu menghadapi tantangan zaman dengan pengetahuan dan keterampilan yang mumpuni.
+            </p>
+            
+            <p>
+              Dalam perkembangannya, pesantren ini telah melahirkan ribuan alumni yang kini tersebar di berbagai bidang kehidupan. Mereka telah berkontribusi secara signifikan dalam pembangunan masyarakat, baik sebagai ulama, pendidik, pengusaha, birokrat, maupun profesi lainnya.
+            </p>
+            
+            <p>
+              Kini, dengan enam jenjang pendidikan formal yang dimiliki mulai dari TPQ hingga SMK, Pondok Pesantren Nurul Islam terus berkomitmen untuk mencetak generasi qurani yang memiliki kedalaman spiritual dan keluasan intelektual.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Principles Section -->
+    <section class="py-20 bg-green-800 text-white">
+      <div class="container mx-auto px-4 lg:px-8">
+        <div class="max-w-4xl mx-auto text-center">
+          <h2 class="text-3xl font-bold mb-12">Nilai-Nilai Kami</h2>
+          
+          <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-green-700 bg-opacity-50 p-6 rounded-xl">
+              <div class="text-4xl mb-4">🌱</div>
+              <h3 class="text-xl font-bold mb-2">Taqwa</h3>
+              <p class="text-green-100">Menjunjung tinggi ketakwaan kepada Allah SWT sebagai dasar segala aktivitas</p>
+            </div>
+            
+            <div class="bg-green-700 bg-opacity-50 p-6 rounded-xl">
+              <div class="text-4xl mb-4">📚</div>
+              <h3 class="text-xl font-bold mb-2">Ilmu</h3>
+              <p class="text-green-100">Mengutamakan keilmuan yang berlandaskan Al-Qur'an dan Hadits</p>
+            </div>
+            
+            <div class="bg-green-700 bg-opacity-50 p-6 rounded-xl">
+              <div class="text-4xl mb-4">❤️</div>
+              <h3 class="text-xl font-bold mb-2">Akhlaq</h3>
+              <p class="text-green-100">Membentuk karakter dan akhlakul karimah dalam setiap aspek kehidupan</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Call to Action -->
+    <section class="py-16 bg-gray-100">
+      <div class="container mx-auto px-4 lg:px-8 text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">Tertarik untuk Bergabung?</h2>
+        <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+          Jadilah bagian dari keluarga besar Pondok Pesantren Nurul Islam dan mulailah perjalanan pendidikan Islami yang berkualitas
+        </p>
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+          <a href="/kontak" class="bg-green-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-800 transition-colors">
+            Hubungi Kami
+          </a>
+          <a href="/pendaftaran" class="border-2 border-green-700 text-green-700 px-6 py-3 rounded-lg font-medium hover:bg-green-700 hover:text-white transition-colors">
+            Info Pendaftaran
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <Footer />
+  </body>
+</html>

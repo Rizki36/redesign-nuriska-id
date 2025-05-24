@@ -1,0 +1,352 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { SITE_TITLE } from '../../consts';
+import { getCollection, render } from 'astro:content';
+import "../../styles/global.css";
+
+export async function getStaticPaths() {
+  const newsEntries = await getCollection('news');
+  return newsEntries.map(entry => ({
+    params: { 
+      slug: entry.data.slug
+    },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+
+// Format dates
+const formatDate = (date: Date): string => {
+  return new Intl.DateTimeFormat('id-ID', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  }).format(date);
+};
+
+// Get related articles (same category, excluding current)
+const allNews = await getCollection('news');
+const relatedNews = allNews
+  .filter(news => news.data.category === entry.data.category && news.data.slug !== entry.data.slug)
+  .sort(() => Math.random() - 0.5) // Randomize
+  .slice(0, 2); // Take just two
+
+// Format for social sharing
+const shareUrl = new URL(`/berita/${entry.data.slug}`, Astro.site).toString();
+const shareTitle = encodeURIComponent(entry.data.title);
+const shareText = encodeURIComponent(entry.data.excerpt);
+
+// Define the page title and description for SEO
+const pageTitle = `${entry.data.title} | ${SITE_TITLE}`;
+const pageDescription = entry.data.excerpt;
+
+// Category names mapping
+const categoryNames = {
+  pengumuman: "Pengumuman",
+  akademik: "Akademik", 
+  kegiatan: "Kegiatan",
+  prestasi: "Prestasi"
+};
+---
+
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <BaseHead title={pageTitle} description={pageDescription} />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content={shareUrl} />
+    <meta property="og:title" content={entry.data.title} />
+    <meta property="og:description" content={entry.data.excerpt} />
+    <meta property="og:image" content={new URL(entry.data.image, Astro.site).toString()} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={shareUrl} />
+    <meta property="twitter:title" content={entry.data.title} />
+    <meta property="twitter:description" content={entry.data.excerpt} />
+    <meta property="twitter:image" content={new URL(entry.data.image, Astro.site).toString()} />
+    
+    <style>
+      /* Article content styles */
+      .article-content {
+        max-width: 100%;
+      }
+      
+      .article-content h2 {
+        font-weight: bold;
+        font-size: 1.75rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: #1f2937;
+      }
+      
+      .article-content h3 {
+        font-weight: bold;
+        font-size: 1.25rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        color: #1f2937;
+      }
+      
+      .article-content p {
+        margin-bottom: 1rem;
+        line-height: 1.7;
+      }
+      
+      .article-content ul, .article-content ol {
+        margin-bottom: 1rem;
+        padding-left: 1.5rem;
+      }
+      
+      .article-content ul {
+        list-style-type: disc;
+      }
+      
+      .article-content ol {
+        list-style-type: decimal;
+      }
+      
+      .article-content li {
+        margin-bottom: 0.5rem;
+        line-height: 1.7;
+      }
+      
+      .article-content a {
+        color: #059669;
+        text-decoration: underline;
+      }
+      
+      .article-content a:hover {
+        color: #065f46;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800 font-sans">
+    <Header />
+    
+    <!-- Breadcrumb -->
+    <nav class="bg-white border-b py-3" aria-label="Breadcrumb">
+      <div class="container mx-auto px-4">
+        <ol class="flex items-center space-x-1 text-sm">
+          <li><a href="/" class="text-gray-500 hover:text-green-600">Beranda</a></li>
+          <li class="flex items-center">
+            <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <a href="/berita" class="ml-1 text-gray-500 hover:text-green-600">Berita</a>
+          </li>
+          <li class="flex items-center">
+            <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="ml-1 text-gray-700 font-medium truncate" aria-current="page">{entry.data.title}</span>
+          </li>
+        </ol>
+      </div>
+    </nav>
+    
+    <!-- Article Content -->
+    <article class="py-12">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto">
+          <!-- Article Header -->
+          <header class="mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{entry.data.title}</h1>
+            <div class="flex items-center justify-between flex-wrap gap-4 text-sm text-gray-500">
+              <div class="flex items-center">
+                <span class="inline-flex items-center gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <span>{entry.data.author}</span>
+                </span>
+              </div>
+              <div class="flex items-center">
+                <span class="inline-flex items-center gap-1.5 mr-4">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span>{formatDate(entry.data.pubDate)}</span>
+                </span>
+                <span class="inline-flex items-center gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                  </svg>
+                  <span>
+                    <a href={`/berita?category=${entry.data.category}`} class="hover:text-green-600">
+                      {categoryNames[entry.data.category as keyof typeof categoryNames]}
+                    </a>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </header>
+          
+          <!-- Featured Image -->
+          <div class="mb-8">
+            <img 
+              src={entry.data.image} 
+              alt={entry.data.title} 
+              class="w-full h-auto rounded-xl shadow-md"
+              onerror="this.onerror=null; this.src=`https://placehold.co/1200x600/009688/FFFFFF?text=${encodeURIComponent(this.alt)}`;this.classList.add('placeholder-img');"
+            >
+            <p class="mt-2 text-sm text-gray-500 text-center">Ilustrasi: {entry.data.title}</p>
+          </div>
+          
+          <!-- Article Body -->
+          <div class="prose prose-lg max-w-none article-content mb-12">
+            <Content />
+          </div>
+          
+          <!-- Sharing Section -->
+          <div class="my-8 border-t border-b border-gray-200 py-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Bagikan Artikel</h3>
+            <div class="flex flex-wrap gap-2">
+              <a 
+                href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
+                aria-label="Bagikan ke Facebook"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
+                </svg>
+              </a>
+              <a 
+                href={`https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrl}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center w-10 h-10 bg-sky-500 text-white rounded-full hover:bg-sky-600 transition-colors"
+                aria-label="Bagikan ke Twitter"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
+                </svg>
+              </a>
+              <a 
+                href={`https://wa.me/?text=${shareTitle}%20${shareUrl}`} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center w-10 h-10 bg-green-500 text-white rounded-full hover:bg-green-600 transition-colors"
+                aria-label="Bagikan ke WhatsApp"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+                </svg>
+              </a>
+              <a 
+                href={`mailto:?subject=${shareTitle}&body=${shareText}%0A${shareUrl}`} 
+                class="inline-flex items-center justify-center w-10 h-10 bg-gray-600 text-white rounded-full hover:bg-gray-700 transition-colors"
+                aria-label="Bagikan via Email"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z"/>
+                </svg>
+              </a>
+              <button 
+                id="copyLink" 
+                class="inline-flex items-center justify-center w-10 h-10 bg-gray-400 text-white rounded-full hover:bg-gray-500 transition-colors"
+                aria-label="Salin tautan"
+                data-url={shareUrl}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+                  <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+    
+    <!-- Related Articles -->
+    {relatedNews.length > 0 && (
+      <section class="py-16 bg-gray-100">
+        <div class="container mx-auto px-4">
+          <div class="max-w-4xl mx-auto">
+            <h2 class="text-2xl font-bold text-gray-800 mb-8">Artikel Terkait</h2>
+            
+            <div class="grid sm:grid-cols-2 gap-8">
+              {relatedNews.map((news) => (
+                <article class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                  <a href={`/berita/${news.data.slug}`} class="block">
+                    <img 
+                      src={news.data.image} 
+                      alt={news.data.title} 
+                      class="w-full h-48 object-cover"
+                      onerror="this.onerror=null; this.src=`https://placehold.co/600x400/009688/FFFFFF?text=${encodeURIComponent(this.alt)}`;this.classList.add('placeholder-img');"
+                    >
+                    <div class="p-6">
+                      <div class="flex justify-between items-center mb-2">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">
+                          {categoryNames[news.data.category as keyof typeof categoryNames]}
+                        </span>
+                        <time class="text-xs text-gray-500">{formatDate(news.data.pubDate)}</time>
+                      </div>
+                      <h3 class="text-lg font-bold text-gray-800 mb-2 line-clamp-2 hover:text-green-600 transition-colors">
+                        {news.data.title}
+                      </h3>
+                      <p class="text-sm text-gray-600 line-clamp-2">{news.data.excerpt}</p>
+                    </div>
+                  </a>
+                </article>
+              ))}
+            </div>
+            
+            <div class="mt-8 text-center">
+              <a href="/berita" class="inline-flex items-center font-medium text-green-600 hover:text-green-700 transition-colors">
+                Lihat Semua Berita
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
+    
+    <Footer />
+    
+    <script>
+      // Script to handle copy link button
+      document.addEventListener('DOMContentLoaded', () => {
+        const copyButton = document.getElementById('copyLink');
+        if (copyButton) {
+          copyButton.addEventListener('click', () => {
+            const url = copyButton.getAttribute('data-url');
+            if(!url) return;
+            navigator.clipboard.writeText(url).then(() => {
+              // Show success message
+              const originalText = copyButton.innerHTML;
+              copyButton.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+              `;
+              copyButton.classList.remove('bg-gray-400');
+              copyButton.classList.add('bg-green-500');
+              
+              // Reset after 2 seconds
+              setTimeout(() => {
+                copyButton.innerHTML = originalText;
+                copyButton.classList.remove('bg-green-500');
+                copyButton.classList.add('bg-gray-400');
+              }, 2000);
+            }).catch(err => {
+              console.error('Failed to copy URL: ', err);
+            });
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
