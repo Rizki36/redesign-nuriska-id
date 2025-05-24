@@ -52,26 +52,32 @@ const educationalPrograms = [
     <Header />
     
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-green-600 to-green-800 text-white py-20 lg:py-32">
-      <div class="container mx-auto px-4 lg:px-8">
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div class="text-center lg:text-left">
-            <h1 class="text-4xl lg:text-6xl font-bold mb-6 leading-tight">
-              Pondok Pesantren <span class="text-green-200">Nurul Islam</span>
+    <section class="relative bg-green-900 text-white">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col lg:flex-row">
+          <!-- Left content -->
+          <div class="pt-16 pb-20 lg:py-24 lg:w-1/2 pr-2">
+            <div class="bg-green-700 text-white inline-block px-4 py-2 rounded-full text-sm mb-6">
+              Pondok Pesantren Nurul Islam
+            </div>
+            <h1 class="text-4xl font-bold mb-6 leading-tight">
+              Membentuk Generasi Qur'ani <span class="text-green-200">dengan Pendidikan Berkualitas</span>
             </h1>
-            <p class="text-xl lg:text-2xl mb-8 text-green-100 leading-relaxed">
-              Membentuk generasi Qur'ani yang berakhlak mulia, berprestasi, dan siap menghadapi tantangan zaman
+            <p class="text-lg lg:text-xl mb-8 text-gray-100 leading-relaxed max-w-xl">
+              Sejak tahun 2000, kami mendedikasikan diri untuk transformasi pendidikan Islam dengan inovasi, nilai, dan komitmen.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <a href="/pendaftaran" class="bg-white text-green-700 px-8 py-3 rounded-lg font-semibold hover:bg-green-50 transition-colors duration-300">
-                Daftar Sekarang
-              </a>
-              <a href="/tentang" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-green-700 transition-colors duration-300">
-                Pelajari Lebih Lanjut
+            <div class="flex flex-wrap gap-4">
+              <a href="/fasilitas" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors">
+                Lihat Fasilitas
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
               </a>
             </div>
           </div>
-          <div class="hidden lg:block">
+          
+          <!-- Right image -->
+          <div class="lg:w-1/2 relative flex items-center justify-center mb-10 md:mb-0">
             <img src="/images/hero-image.jpg" alt="Suasana Pondok Pesantren Nurul Islam" class="rounded-2xl shadow-2xl w-full h-auto">
           </div>
         </div>
@@ -135,7 +141,12 @@ const educationalPrograms = [
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {latestNews.map((news) => (
             <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-              <img src={news.image} alt={news.title} class="w-full h-48 object-cover">
+              <img 
+                src={news.image} 
+                alt={news.title} 
+                class="w-full h-48 object-cover"
+                onerror="this.onerror=null; this.src=`https://placehold.co/600x400/009688/FFFFFF?text=${encodeURIComponent(this.alt)}`;this.classList.add('placeholder-img');"
+              >
               <div class="p-6">
                 <div class="flex items-center justify-between mb-3">
                   <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
@@ -162,7 +173,7 @@ const educationalPrograms = [
     </section>
 
     <!-- Islamic Quote Section -->
-    <section class="py-20 bg-green-600 text-white">
+    <section class="py-20 bg-green-700 text-white">
       <div class="container mx-auto px-4 lg:px-8 text-center">
         <div class="max-w-4xl mx-auto">
           <div class="text-6xl mb-6">"</div>
@@ -196,7 +207,7 @@ const educationalPrograms = [
             </a>
           </div>
           <div>
-            <img src="/images/about-image.jpg" alt="Kegiatan Santri" class="rounded-2xl shadow-lg w-full h-auto">
+            <img src="/images/kegiatan.jpg" alt="Kegiatan Santri" class="rounded-2xl shadow-lg w-full h-auto">
           </div>
         </div>
       </div>
@@ -210,10 +221,10 @@ const educationalPrograms = [
           Mulai perjalanan pendidikan islami yang berkualitas. Hubungi kami untuk informasi lebih lanjut.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="/kontak" class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300">
+          <a href="https://api.whatsapp.com/send?phone=6281939000818&text=Assalamualaikum+Mohon+Informasi+PSB+Pondok+Pesantren+Nurul+Islam&source=&data=" class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300">
             Hubungi Kami
           </a>
-          <a href="/pendaftaran" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition-colors duration-300">
+          <a href="https://psb.nuriska.id/" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition-colors duration-300">
             Info Pendaftaran
           </a>
         </div>
