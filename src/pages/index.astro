@@ -42,7 +42,7 @@ const educationalPrograms = [
 ---
 
 <!doctype html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" class="scroll-smooth" data-repeat-animations="true">
   <head>
     <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
   </head>
@@ -190,7 +190,7 @@ const educationalPrograms = [
     <section class="py-20">
       <div class="container mx-auto px-4 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div class="reveal-left" data-delay="300">
+          <div class="reveal-left">
             <h2 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-6">Tentang Kami</h2>
             <p class="text-lg text-gray-600 mb-6 leading-relaxed">
               Pondok Pesantren Nurul Islam adalah lembaga pendidikan Islam yang telah berdiri sejak tahun 2000. 
@@ -204,7 +204,7 @@ const educationalPrograms = [
               Pelajari Lebih Lanjut
             </a>
           </div>
-          <div class="reveal-right" data-delay="300">
+          <div class="reveal-right">
             <img src="/images/kegiatan.jpg" alt="Kegiatan Santri" class="rounded-2xl shadow-lg w-full h-auto">
           </div>
         </div>
@@ -256,6 +256,7 @@ const educationalPrograms = [
   .reveal-scale {
     opacity: 0;
     transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    will-change: opacity, transform;
   }
   
   .reveal-left {
@@ -282,27 +283,66 @@ const educationalPrograms = [
 <script>
   // Intersection Observer for reveal animations
   document.addEventListener('DOMContentLoaded', () => {
+    // Configuration options
+    const htmlElement = document.documentElement;
+    const repeatAnimations = htmlElement.getAttribute('data-repeat-animations') === 'true';
+    
+    // Elements tracking
+    const animatedElements = new Map();
+    
+    // Reveal animation logic
     const revealElements = document.querySelectorAll('.reveal-element, .reveal-left, .reveal-right, .reveal-scale');
     
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
+        const element = entry.target;
+        const elementId = element.id || `auto-id-${Math.random().toString(36).substr(2, 9)}`;
+        
+        if (!element.id) {
+          element.id = elementId;
+        }
+        
+        // Store element state if not already tracked
+        if (!animatedElements.has(elementId)) {
+          animatedElements.set(elementId, {
+            hasAnimated: false,
+            element: element
+          });
+        }
+        
+        const elementState = animatedElements.get(elementId);
+        
         if (entry.isIntersecting) {
-          const element = entry.target;
-          // Get delay attribute or default to 0
-          const delay = Number.parseInt(element.getAttribute('data-delay') ||"0") ;
-          
-          // Add active class after the specified delay
-          setTimeout(() => {
-            element.classList.add('active');
-          }, delay);
-          
-          // Stop observing after animation
+          // If repeating animations is enabled or element hasn't animated yet
+          if (repeatAnimations || !elementState.hasAnimated) {
+            const delay = Number.parseInt(element.getAttribute('data-delay') || "0");
+            
+            // Add active class after the specified delay
+            setTimeout(() => {
+              element.classList.add('active');
+              elementState.hasAnimated = true;
+            }, delay);
+          }
+        } else if (repeatAnimations) {
+          // When scrolling away, remove active class to enable re-animation
+          // Only if element has already been animated once
+          if (elementState.hasAnimated) {
+            // Optional: add delay before resetting animation
+            const resetDelay = 100;
+            setTimeout(() => {
+              element.classList.remove('active');
+            }, resetDelay);
+          }
+        }
+        
+        // Continue observing if animations should repeat
+        if (!repeatAnimations && elementState.hasAnimated) {
           revealObserver.unobserve(element);
         }
       });
     }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
+      threshold: 0.6,
+      rootMargin: '0px 0px -100px 0px'
     });
     
     revealElements.forEach(element => {
@@ -311,30 +351,61 @@ const educationalPrograms = [
     
     // Counter animation
     const counters = document.querySelectorAll('.counter');
+    const countedElements = new Map();
     
     const counterObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
+        const counter = entry.target;
+        const counterId = counter.id || `counter-${Math.random().toString(36).substr(2, 9)}`;
+        
+        if (!counter.id) {
+          counter.id = counterId;
+        }
+        
+        // Store counter state if not already tracked
+        if (!countedElements.has(counterId)) {
+          countedElements.set(counterId, {
+            hasCounted: false,
+            element: counter
+          });
+        }
+        
+        const counterState = countedElements.get(counterId);
+        
         if (entry.isIntersecting) {
-          const counter = entry.target;
-          const target = Number.parseInt(counter.getAttribute('data-target') || '0');
-          const duration = 2000; // ms
-          const increment = Math.ceil(target / (duration / 16)); // 60fps
-          
-          let current = 0;
-          const updateCounter = () => {
-            current += increment;
+          // If repeating animations is enabled or counter hasn't animated yet
+          if (repeatAnimations || !counterState.hasCounted) {
+            const target = Number.parseInt(counter.getAttribute('data-target') || '0');
+            const duration = 2000; // ms
+            const increment = Math.ceil(target / (duration / 16)); // 60fps
             
-            if (current >= target) {
-              counter.textContent = target + '+';
-              clearInterval(timer);
-            } else {
-              counter.textContent = current.toString();
+            // Reset counter to 0 if repeating
+            if (repeatAnimations && counterState.hasCounted) {
+              counter.textContent = '0';
             }
-          };
-          
-          const timer = setInterval(updateCounter, 16);
-          
-          // Stop observing after animation
+            
+            let current = 0;
+            const updateCounter = () => {
+              current += increment;
+              
+              if (current >= target) {
+                counter.textContent = target + '+';
+                clearInterval(timer);
+              } else {
+                counter.textContent = current.toString();
+              }
+            };
+            
+            const timer = setInterval(updateCounter, 16);
+            counterState.hasCounted = true;
+          }
+        } else if (repeatAnimations) {
+          // When scrolling away, reset counter to enable re-counting
+          counter.textContent = '0';
+        }
+        
+        // Continue observing if animations should repeat
+        if (!repeatAnimations && counterState.hasCounted) {
           counterObserver.unobserve(counter);
         }
       });
