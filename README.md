@@ -1,68 +1,48 @@
-# Astro Starter Kit: Blog
+# Pondok Pesantren Nurul Islam Website Redesign
 
-```sh
-npm create astro@latest -- --template blog
-```
+[![Astro](https://img.shields.io/badge/Built%20with-Astro-FF5D01.svg?style=flat-square)](https://astro.build)
+[![Tailwind CSS](https://img.shields.io/badge/Styled%20with-Tailwind-38B2AC.svg?style=flat-square)](https://tailwindcss.com)
+[![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6.svg?style=flat-square)](https://www.typescriptlang.org/)
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/blog)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/blog)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/blog/devcontainer.json)
+A modern, minimalist redesign of the Nuriska.id website for Pondok Pesantren Nurul Islam with enhanced performance, better user experience, and improved content organization.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 🚀 Features
 
-![blog](https://github.com/withastro/astro/assets/2244813/ff10799f-a816-4703-b967-c78997e8323d)
+- **Blazing Fast Performance**: Built with Astro's static site generation for optimal loading speeds
+- **Responsive Design**: Mobile-first approach ensuring great experience across all devices
+- **Modern UI**: Clean, minimalist interface with ample white space and clear visual hierarchy
+- **Content Collections**: Structured content management for news, announcements, and programs
+- **Accessibility**: WCAG 2.1 AA compliant design and implementation
+- **Dark/Light Mode**: Theme toggling for user preference
+- **Optimized Images**: Automatic image optimization for improved loading times
+- **Interactive Components**: Selective hydration for interactive elements only when needed
 
-Features:
+## 📦 Content Collections
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and OpenGraph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+The site uses Astro's content collections for structured content management:
 
-## 🚀 Project Structure
+- **News**: School announcements, events, and achievements
+  - Categories: `pengumuman`, `akademik`, `kegiatan`, `prestasi`
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🧰 Tech Stack
 
-```text
-├── public/
-├── src/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
-```
+- **[Astro](https://astro.build)**: Core framework for static site generation
+- **[TypeScript](https://www.typescriptlang.org/)**: Type-safe JavaScript for better developer experience
+- **[Tailwind CSS](https://tailwindcss.com)**: Utility-first CSS framework for styling
+- **[React](https://reactjs.org)**: Used selectively for interactive components
+- **[Astro Content Collections](https://docs.astro.build/en/guides/content-collections/)**: For structured content management
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## 🛠️ Development
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+### Prerequisites
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+- Node.js 18+
+- NPM
 
-Any static assets, like images, can be placed in the `public/` directory.
+### Getting Started
 
-## 🧞 Commands
+1. Clone the repository
+   ```bash
+   git clone https://github.com/Rizki36/redesign-nuriska-id
+   cd redesign-nuriska-id
 
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
