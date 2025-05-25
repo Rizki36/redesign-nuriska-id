@@ -315,38 +315,5 @@ const categoryNames = {
     )}
     
     <Footer />
-    
-    <script>
-      // Script to handle copy link button
-      document.addEventListener('DOMContentLoaded', () => {
-        const copyButton = document.getElementById('copyLink');
-        if (copyButton) {
-          copyButton.addEventListener('click', () => {
-            const url = copyButton.getAttribute('data-url');
-            if(!url) return;
-            navigator.clipboard.writeText(url).then(() => {
-              // Show success message
-              const originalText = copyButton.innerHTML;
-              copyButton.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-              `;
-              copyButton.classList.remove('bg-gray-400');
-              copyButton.classList.add('bg-green-500');
-              
-              // Reset after 2 seconds
-              setTimeout(() => {
-                copyButton.innerHTML = originalText;
-                copyButton.classList.remove('bg-green-500');
-                copyButton.classList.add('bg-gray-400');
-              }, 2000);
-            }).catch(err => {
-              console.error('Failed to copy URL: ', err);
-            });
-          });
-        }
-      });
-    </script>
   </body>
 </html>
