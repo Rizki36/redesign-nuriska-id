@@ -1,0 +1,286 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { SITE_TITLE } from '../consts';
+import "../styles/global.css";
+
+const pageTitle = "Fasilitas | " + SITE_TITLE;
+const pageDescription = "Fasilitas dan sarana prasarana Pondok Pesantren Nurul Islam untuk mendukung pendidikan santri";
+
+// Define all facilities with their details
+const facilities = [
+  {
+    id: 'blkk',
+    name: 'BLKK Komputer dan BLKK Multimedia',
+    description: 'Balai Latihan Kerja Komunitas (BLKK) kami menyediakan pelatihan keterampilan di bidang komputer dan multimedia untuk mempersiapkan santri menghadapi dunia digital.',
+    icon: 'computer',
+    image: '/images/facilities/blkk.jpg',
+    features: [
+      'Software development training',
+      'Graphic design courses',
+      'Video editing workshops',
+      'Digital marketing skills'
+    ]
+  },
+  {
+    id: 'lab-komputer',
+    name: 'Laboratorium Komputer',
+    description: 'Laboratorium komputer modern dengan perangkat terkini untuk mendukung pembelajaran teknologi informasi dan komunikasi.',
+    icon: 'desktop_windows',
+    image: '/images/facilities/lab-komputer.jpg',
+    features: [
+      'Komputer dengan spesifikasi tinggi',
+      'Koneksi internet cepat',
+      'Software pendidikan terlengkap',
+      'Ruangan ber-AC'
+    ]
+  },
+  {
+    id: 'gedung-aula',
+    name: 'Gedung Aula Nurul Islam',
+    description: 'Aula serbaguna dengan kapasitas besar untuk berbagai kegiatan seperti seminar, wisuda, dan acara pesantren lainnya.',
+    icon: 'meeting_room',
+    image: '/images/facilities/aula.jpg',
+    features: [
+      'Kapasitas hingga 500 orang',
+      'Sistem audio visual modern',
+      'Panggung pertunjukan',
+      'Area pameran'
+    ]
+  },
+  {
+    id: 'pondok-transit',
+    name: 'Pondok Transit',
+    description: 'Tempat peristirahatan sementara bagi tamu dan wali santri yang berkunjung ke pesantren.',
+    icon: 'hotel',
+    image: '/images/facilities/pondok-transit.jpg',
+    features: [
+      'Kamar nyaman',
+      'Area lounge',
+      'Dapur bersama',
+      'Lokasi strategis'
+    ]
+  },
+  {
+    id: 'perpustakaan',
+    name: 'Perpustakaan',
+    description: 'Perpustakaan lengkap dengan koleksi ribuan buku, jurnal, dan referensi ilmiah untuk mendukung pendidikan santri.',
+    icon: 'local_library',
+    image: '/images/facilities/perpustakaan.jpg',
+    features: [
+      'Ribuan koleksi buku',
+      'Referensi kitab kuning',
+      'Jurnal ilmiah',
+      'Area belajar tenang'
+    ]
+  },
+  {
+    id: 'masjid',
+    name: 'Masjid dan Musholla',
+    description: 'Tempat ibadah yang luas dan nyaman untuk melaksanakan shalat berjamaah dan kegiatan keagamaan lainnya.',
+    icon: 'mosque',
+    image: '/images/facilities/masjid.jpg',
+    features: [
+      'Kapasitas besar',
+      'Sistem audio yang baik',
+      'Sarana wudhu modern',
+      'Tersebar di berbagai area'
+    ]
+  },
+  {
+    id: 'lab-ipa',
+    name: 'Laboratorium IPA',
+    description: 'Laboratorium Ilmu Pengetahuan Alam yang dilengkapi dengan peralatan eksperimen untuk pelajaran biologi, fisika, dan kimia.',
+    icon: 'science',
+    image: '/images/facilities/lab-ipa.jpg',
+    features: [
+      'Peralatan praktikum lengkap',
+      'Mikroskop digital',
+      'Model anatomi 3D',
+      'Bahan praktikum aman'
+    ]
+  },
+  {
+    id: 'asrama',
+    name: 'Asrama Santri',
+    description: 'Tempat tinggal santri yang nyaman, bersih, dan kondusif untuk belajar dengan sistem asrama terpisah untuk putra dan putri.',
+    icon: 'apartment',
+    image: '/images/facilities/asrama.jpg',
+    features: [
+      'Tempat tidur nyaman',
+      'Lemari pakaian',
+      'Area belajar',
+      'Sistem keamanan 24 jam'
+    ]
+  },
+  {
+    id: 'gedung-ac',
+    name: 'Gedung ber-AC',
+    description: 'Ruang kelas dan ruang belajar yang dilengkapi dengan pendingin udara untuk menciptakan suasana belajar yang nyaman.',
+    icon: 'ac_unit',
+    image: '/images/facilities/gedung-ac.jpg',
+    features: [
+      'Suhu ruangan optimal',
+      'Sirkulasi udara baik',
+      'Ramah lingkungan',
+      'Perawatan rutin'
+    ]
+  },
+  {
+    id: 'olahraga',
+    name: 'Sarana Olahraga',
+    description: 'Berbagai fasilitas olahraga untuk menunjang kesehatan fisik dan mengembangkan bakat santri di bidang olahraga.',
+    icon: 'sports_soccer',
+    image: '/images/facilities/olahraga.jpg',
+    features: [
+      'Lapangan futsal',
+      'Lapangan badminton',
+      'Area basket',
+      'Tenis meja'
+    ]
+  }
+];
+
+// Stringify facility data for client-side usage
+const facilitiesJson = JSON.stringify(facilities);
+---
+
+<!doctype html>
+<html lang="id" class="scroll-smooth">
+  <head>
+    <BaseHead title={pageTitle} description={pageDescription} />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  </head>
+  <body class="bg-white text-gray-800 font-sans">
+    <Header />
+    
+    <!-- Hero Section -->
+    <section class="relative bg-green-900 text-white py-16 overflow-hidden">
+      <!-- Decorative elements -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        <!-- Blurred shapes -->
+        <div class="absolute top-20 left-10 w-60 h-60 rounded-full bg-green-600/30 blur-3xl"></div>
+        <div class="absolute bottom-10 right-20 w-80 h-80 rounded-full bg-green-500/20 blur-3xl"></div>
+      </div>
+      
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="max-w-3xl mx-auto text-center">
+          <h1 class="text-4xl lg:text-5xl font-bold mb-6 reveal-element">Fasilitas Pesantren</h1>
+          <p class="text-lg lg:text-xl text-green-50 mb-8 reveal-element" data-delay="100">
+            Kami menyediakan berbagai fasilitas modern yang mendukung pendidikan dan kenyamanan santri dalam belajar dan mengembangkan potensi mereka.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Facilities Overview -->
+    <section class="py-16">
+      <div class="container mx-auto px-4">
+        <div class="text-center mb-12 reveal-element">
+          <h2 class="text-3xl font-bold text-gray-800">Sarana dan Prasarana</h2>
+          <p class="text-lg text-gray-600 mt-4 max-w-3xl mx-auto">
+            Berikut adalah fasilitas yang kami sediakan untuk mendukung proses pendidikan dan kehidupan santri di Pondok Pesantren Nurul Islam.
+          </p>
+        </div>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {facilities.map((facility, index) => (
+            <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden reveal-element" data-delay={index * 100}>
+              <div class="relative h-52">
+                <img 
+                  src={facility.image || `https://placehold.co/800x400/009688/FFFFFF?text=${encodeURIComponent(facility.name)}`}
+                  alt={facility.name}
+                  class="w-full h-full object-cover"
+                  onerror="this.onerror=null; this.src=`https://placehold.co/800x400/009688/FFFFFF?text=${encodeURIComponent(this.alt)}`;this.classList.add('placeholder-img');"
+                />
+              </div>
+              <div class="p-6">
+                <div class="flex items-start mb-4">
+                  <span class="material-icons text-green-600 mr-3">{facility.icon}</span>
+                  <p class="text-gray-600">{facility.description}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-16 bg-green-50">
+      <div class="container mx-auto px-4">
+        <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden reveal-element">
+          <div class="flex flex-col lg:flex-row">
+            <div class="lg:w-1/2">
+              <img 
+                src="/images/facilities/cta-image.jpg" 
+                alt="Suasana Pondok Pesantren" 
+                class="w-full h-full object-cover"
+                onerror="this.src='https://placehold.co/800x600/009688/FFFFFF?text=Pendaftaran%20Santri%20Baru'"
+              />
+            </div>
+            <div class="lg:w-1/2 p-8 flex flex-col justify-center">
+              <h2 class="text-2xl font-bold text-gray-800 mb-4">Ingin Mendaftar?</h2>
+              <p class="text-gray-600 mb-6">
+                Bergabunglah dengan kami dan rasakan pengalaman belajar dalam lingkungan yang Islami dan modern. 
+                Pendaftaran santri baru sedang dibuka!
+              </p>
+              <div class="flex flex-wrap gap-4">
+                <a href="https://psb.nuriska.id/" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                  Daftar Sekarang
+                </a>
+                <a href="https://api.whatsapp.com/send?phone=6281939000818&text=Assalamualaikum+Mohon+Informasi+PSB+Pondok+Pesantren+Nurul+Islam" class="border border-green-600 text-green-600 hover:bg-green-50 px-6 py-3 rounded-lg font-medium transition-colors">
+                  Hubungi Kami
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <Footer />
+  </body>
+</html>
+
+<style>
+  /* Animation styles */
+  .reveal-element {
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+    transform: translateY(20px);
+  }
+  
+  .reveal-element.active {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
+<script define:vars={{ facilitiesJson }}>  
+  document.addEventListener('DOMContentLoaded', () => {
+    // Reveal animation
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const element = entry.target;
+          const delay = parseInt(element.getAttribute('data-delay') || '0');
+          
+          setTimeout(() => {
+            element.classList.add('active');
+          }, delay);
+          
+          revealObserver.unobserve(element);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+    
+    document.querySelectorAll('.reveal-element').forEach(element => {
+      revealObserver.observe(element);
+    });
+  });
+</script>
