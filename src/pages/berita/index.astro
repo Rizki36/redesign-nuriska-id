@@ -22,15 +22,22 @@ const categories = [
   { id: "prestasi", name: "Prestasi", color: "red" },
 ];
 
-const { searchParams } = Astro.url;
-const category = searchParams.get('category');
-
-const filteredNews = category 
-  ? allNews.filter(news => news.data.category === category)
-  : allNews;
+// Don't filter server-side, pass all news to the client
+const allNewsFormatted = allNews.map(news => ({
+  id: news.id,
+  slug: news.data.slug || news.id,
+  title: news.data.title,
+  excerpt: news.data.excerpt,
+  image: news.data.image,
+  category: news.data.category,
+  author: news.data.author,
+  pubDate: news.data.pubDate.toISOString(),
+  featured: news.data.featured
+}));
 
 // Format dates
-const formatDate = (date: Date): string => {
+const formatDate = (isoDate: string): string => {
+  const date = new Date(isoDate);
   return new Intl.DateTimeFormat('id-ID', {
     year: 'numeric',
     month: 'long',
@@ -39,11 +46,6 @@ const formatDate = (date: Date): string => {
 };
 
 // Color mapping for category badges
-const getCategoryColor = (categoryId: string): string => {
-  const foundCategory = categories.find(cat => cat.id === categoryId);
-  return foundCategory ? foundCategory.color : "gray";
-};
-
 const colorClasses = {
   blue: "bg-blue-100 text-blue-700",
   green: "bg-green-100 text-green-700",
@@ -68,7 +70,7 @@ const pageDescription = "Berita terbaru dan pengumuman dari Pondok Pesantren Nur
     <section class="bg-green-900 text-white py-16">
       <div class="container mx-auto px-4">
         <div class="max-w-4xl mx-auto">
-          <h1 class="text-4xl font-bold mb-4">Berita & Pengumuman</h1>
+          <h1 id="category-title" class="text-4xl font-bold mb-4">Berita & Pengumuman</h1>
           <p class="text-lg text-green-100">
             Informasi terbaru seputar kegiatan, prestasi, dan pengumuman penting dari Pondok Pesantren Nurul Islam
           </p>
@@ -84,11 +86,12 @@ const pageDescription = "Berita terbaru dan pengumuman dari Pondok Pesantren Nur
           <div class="w-full lg:w-1/4">
             <div class="bg-white rounded-xl shadow-md p-6 mb-6">
               <h2 class="text-xl font-bold text-gray-800 mb-4">Kategori</h2>
-              <ul class="space-y-2">
+              <ul class="space-y-2" id="category-list">
                 <li>
                   <a 
                     href="/berita" 
-                    class={`block px-4 py-2 rounded-lg transition-colors ${!category ? 'bg-green-100 text-green-700' : 'hover:bg-gray-100'}`}
+                    class="category-link block px-4 py-2 rounded-lg transition-colors hover:bg-gray-100"
+                    data-category=""
                   >
                     Semua Berita
                   </a>
@@ -97,7 +100,9 @@ const pageDescription = "Berita terbaru dan pengumuman dari Pondok Pesantren Nur
                   <li>
                     <a 
                       href={`/berita?category=${cat.id}`} 
-                      class={`block px-4 py-2 rounded-lg transition-colors ${category === cat.id ? `bg-${cat.color}-100 text-${cat.color}-700` : 'hover:bg-gray-100'}`}
+                      class="category-link block px-4 py-2 rounded-lg transition-colors hover:bg-gray-100"
+                      data-category={cat.id}
+                      data-color={colorClasses[cat.color as keyof typeof colorClasses]}
                     >
                       {cat.name}
                     </a>
@@ -108,116 +113,77 @@ const pageDescription = "Berita terbaru dan pengumuman dari Pondok Pesantren Nur
             
             <div class="bg-white rounded-xl shadow-md p-6">
               <h2 class="text-xl font-bold text-gray-800 mb-4">Cari Berita</h2>
-              <form action="/berita/search" method="get">
-                <div class="relative">
-                  <input 
-                    type="text" 
-                    name="q" 
-                    placeholder="Kata kunci..." 
-                    class="w-full p-3 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                  >
-                  <button 
-                    type="submit" 
-                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-green-600"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  </button>
-                </div>
-              </form>
+              <div class="relative">
+                <input 
+                  type="text" 
+                  id="search-input"
+                  placeholder="Kata kunci..." 
+                  class="w-full p-3 pr-10 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                <button 
+                  id="search-button"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-green-600"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
           
           <!-- Main Content -->
           <div class="w-full lg:w-3/4">
             <!-- Category title if filtered -->
-            {category && (
-              <div class="mb-8 pb-4 border-b border-gray-200">
-                <h2 class="text-2xl font-bold text-gray-800">
-                  Kategori: {categories.find(cat => cat.id === category)?.name || "Tidak diketahui"}
-                </h2>
-                <p class="text-gray-600">Menampilkan {filteredNews.length} artikel</p>
-              </div>
-            )}
+            <div id="category-header" class="mb-8 pb-4 border-b border-gray-200 hidden">
+              <h2 class="text-2xl font-bold text-gray-800">
+                Kategori: <span id="category-name">...</span>
+              </h2>
+              <p class="text-gray-600">Menampilkan <span id="news-count">0</span> artikel</p>
+            </div>
             
             <!-- News Grid -->
-            {filteredNews.length > 0 ? (
-              <div class="grid md:grid-cols-2 gap-8">
-                {filteredNews.map((news) => (
-                  <article class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
-                    <img 
-                      src={news.data.image} 
-                      alt={news.data.title} 
-                      class="w-full h-48 object-cover"
-                      onerror="this.onerror=null; this.src=`https://placehold.co/600x400/009688/FFFFFF?text=${encodeURIComponent(this.alt)}`;this.classList.add('placeholder-img');"
-                    >
-                    <div class="p-6">
-                      <div class="flex justify-between items-center mb-3">
-                        <span class={`px-3 py-1 rounded-full text-sm font-medium ${colorClasses[getCategoryColor(news.data.category) as keyof typeof colorClasses]}`}>
-                          {categories.find(cat => cat.id === news.data.category)?.name || "Uncategorized"}
-                        </span>
-                        <time class="text-sm text-gray-500">{formatDate(news.data.pubDate)}</time>
-                      </div>
-                      <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
-                        <a href={`/berita/${news.data.slug}`} class="hover:text-green-600 transition-colors">
-                          {news.data.title}
-                        </a>
-                      </h3>
-                      <p class="text-gray-600 mb-4 line-clamp-3">{news.data.excerpt}</p>
-                      <div class="flex items-center justify-between">
-                        <span class="text-sm text-gray-500">Oleh: {news.data.author}</span>
-                        <a href={`/berita/${news.data.slug}`} class="text-green-600 font-medium hover:text-green-700 transition-colors inline-flex items-center">
-                          Baca Selengkapnya
-                          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-                          </svg>
-                        </a>
-                      </div>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <div class="bg-white rounded-xl shadow-md p-8 text-center">
-                <div class="text-5xl mb-4">🔍</div>
-                <h3 class="text-xl font-bold text-gray-800 mb-2">Tidak Ada Berita</h3>
-                <p class="text-gray-600">Belum ada berita untuk kategori ini. Silakan pilih kategori lain atau kembali ke semua berita.</p>
-                <a href="/berita" class="mt-4 inline-block bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition-colors">
-                  Lihat Semua Berita
-                </a>
-              </div>
-            )}
+            <div id="news-grid" class="grid md:grid-cols-2 gap-8">
+              <!-- News articles will be rendered here -->
+            </div>
+            
+            <!-- No Results -->
+            <div id="no-results" class="bg-white rounded-xl shadow-md p-8 text-center hidden">
+              <div class="text-5xl mb-4">🔍</div>
+              <h3 class="text-xl font-bold text-gray-800 mb-2">Tidak Ada Berita</h3>
+              <p class="text-gray-600">Belum ada berita untuk kategori ini. Silakan pilih kategori lain atau kembali ke semua berita.</p>
+              <a href="/berita" class="mt-4 inline-block bg-green-600 text-white px-5 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                Lihat Semua Berita
+              </a>
+            </div>
             
             <!-- Pagination -->
-            {filteredNews.length > 0 && (
-              <div class="mt-12 flex justify-center">
-                <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
-                  <a href="#" class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                    <span class="sr-only">Previous</span>
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                    </svg>
-                  </a>
-                  <a href="#" aria-current="page" class="relative inline-flex items-center px-4 py-2 border border-green-500 bg-green-50 text-sm font-medium text-green-600">
-                    1
-                  </a>
-                  <a href="#" class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                    <span class="sr-only">Next</span>
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                    </svg>
-                  </a>
-                </nav>
-              </div>
-            )}
+            <div id="pagination" class="mt-12 flex justify-center hidden">
+              <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
+                <a href="#" class="relative inline-flex items-center px-3 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                  <span class="sr-only">Previous</span>
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </a>
+                <a href="#" aria-current="page" class="relative inline-flex items-center px-4 py-2 border border-green-500 bg-green-50 text-sm font-medium text-green-600">
+                  1
+                </a>
+                <a href="#" class="relative inline-flex items-center px-3 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                  <span class="sr-only">Next</span>
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </a>
+              </nav>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Subscribe Section -->
-    <section class="py-16 bg-green-800 text-white">
+     <!-- Subscribe Section -->
+     <section class="py-16 bg-green-800 text-white">
       <div class="container mx-auto px-4">
         <div class="max-w-3xl mx-auto text-center">
           <h2 class="text-2xl font-bold mb-4">Dapatkan Update Berita Terbaru</h2>
@@ -227,5 +193,191 @@ const pageDescription = "Berita terbaru dan pengumuman dari Pondok Pesantren Nur
     </section>
     
     <Footer />
+    
+    <script define:vars={{ allNewsFormatted, categories, colorClasses }}>
+      // All news and category data available to client-side JS
+      document.addEventListener('DOMContentLoaded', () => {
+        // Get DOM elements
+        const categoryLinks = document.querySelectorAll('.category-link');
+        const newsGrid = document.getElementById('news-grid');
+        const categoryHeader = document.getElementById('category-header');
+        const categoryName = document.getElementById('category-name');
+        const newsCount = document.getElementById('news-count');
+        const noResults = document.getElementById('no-results');
+        const pagination = document.getElementById('pagination');
+        const categoryTitle = document.getElementById('category-title');
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+        
+        // Get current category from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCategory = urlParams.get('category') || '';
+        const searchQuery = urlParams.get('q') || '';
+        
+        // Helper function to format dates
+        const formatDate = (isoDate) => {
+          const date = new Date(isoDate);
+          return new Intl.DateTimeFormat('id-ID', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          }).format(date);
+        };
+        
+        // Helper function to get category color
+        const getCategoryColor = (categoryId) => {
+          const foundCategory = categories.find(cat => cat.id === categoryId);
+          return foundCategory ? foundCategory.color : "gray";
+        };
+        
+        // Helper function to get category name
+        const getCategoryName = (categoryId) => {
+          const foundCategory = categories.find(cat => cat.id === categoryId);
+          return foundCategory ? foundCategory.name : "Uncategorized";
+        };
+        
+        // Filter news based on current category and search query
+        const filterNews = () => {
+          let filtered = [...allNewsFormatted];
+          
+          // Apply category filter
+          if (currentCategory) {
+            filtered = filtered.filter(news => news.category === currentCategory);
+          }
+          
+          // Apply search filter if needed
+          if (searchQuery) {
+            const query = searchQuery.toLowerCase();
+            filtered = filtered.filter(news => 
+              news.title.toLowerCase().includes(query) || 
+              news.excerpt.toLowerCase().includes(query)
+            );
+          }
+          
+          return filtered;
+        };
+        
+        // Update UI based on filtered news
+        const updateUI = (filteredNews) => {
+          // Update category header
+          if (currentCategory) {
+            categoryHeader.classList.remove('hidden');
+            categoryName.textContent = getCategoryName(currentCategory);
+            categoryTitle.textContent = `Berita - ${getCategoryName(currentCategory)}`;
+          } else {
+            categoryHeader.classList.add('hidden');
+            categoryTitle.textContent = 'Berita & Pengumuman';
+          }
+          
+          // Update news count
+          newsCount.textContent = filteredNews.length.toString();
+          
+          // Show/hide no results message
+          if (filteredNews.length === 0) {
+            newsGrid.classList.add('hidden');
+            noResults.classList.remove('hidden');
+            pagination.classList.add('hidden');
+          } else {
+            newsGrid.classList.remove('hidden');
+            noResults.classList.add('hidden');
+            
+            // Show pagination if there are many results
+            if (filteredNews.length > 10) {
+              pagination.classList.remove('hidden');
+            } else {
+              pagination.classList.add('hidden');
+            }
+          }
+          
+          // Highlight active category
+          categoryLinks.forEach(link => {
+            const linkCategory = link.getAttribute('data-category') || '';
+            
+            if (linkCategory === currentCategory) {
+              // Get color class for this category
+              const colorClass = link.getAttribute('data-color') || 'bg-green-100 text-green-700';
+              link.className = `category-link block px-4 py-2 rounded-lg transition-colors ${colorClass}`;
+            } else {
+              link.className = 'category-link block px-4 py-2 rounded-lg transition-colors hover:bg-gray-100';
+            }
+          });
+          
+          // Render news articles
+          renderNews(filteredNews);
+        };
+        
+        // Render news articles to the grid
+        const renderNews = (newsItems) => {
+          newsGrid.innerHTML = '';
+          
+          newsItems.forEach(news => {
+            const categoryColorClass = colorClasses[getCategoryColor(news.category)];
+            
+            const articleHtml = `
+              <article class="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                <img 
+                  src="${news.image}" 
+                  alt="${news.title}" 
+                  class="w-full h-48 object-cover"
+                  onerror="this.onerror=null; this.src=\`https://placehold.co/600x400/009688/FFFFFF?text=${encodeURIComponent(news.title)}\`;this.classList.add('placeholder-img');"
+                >
+                <div class="p-6">
+                  <div class="flex justify-between items-center mb-3">
+                    <span class="px-3 py-1 rounded-full text-sm font-medium ${categoryColorClass}">
+                      ${getCategoryName(news.category)}
+                    </span>
+                    <time class="text-sm text-gray-500">${formatDate(news.pubDate)}</time>
+                  </div>
+                  <h3 class="text-xl font-bold text-gray-800 mb-2 line-clamp-2">
+                    <a href="/berita/${news.slug}" class="hover:text-green-600 transition-colors">
+                      ${news.title}
+                    </a>
+                  </h3>
+                  <p class="text-gray-600 mb-4 line-clamp-3">${news.excerpt}</p>
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm text-gray-500">Oleh: ${news.author}</span>
+                    <a href="/berita/${news.slug}" class="text-green-600 font-medium hover:text-green-700 transition-colors inline-flex items-center">
+                      Baca Selengkapnya
+                      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            `;
+            
+            newsGrid.insertAdjacentHTML('beforeend', articleHtml);
+          });
+        };
+        
+        // Handle search form submission
+        if (searchButton && searchInput) {
+          searchButton.addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            if (query) {
+              const url = new URL(window.location);
+              url.searchParams.set('q', query);
+              window.location.href = url.toString();
+            }
+          });
+          
+          searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+              searchButton.click();
+            }
+          });
+          
+          // Set initial search input value
+          if (searchQuery) {
+            searchInput.value = searchQuery;
+          }
+        }
+        
+        // Filter and render news
+        const filteredNews = filterNews();
+        updateUI(filteredNews);
+      });
+    </script>
   </body>
 </html>
