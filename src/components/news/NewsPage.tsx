@@ -167,7 +167,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ allNews, categories, colorClasses }
                 </ul>
               </div>
               
-              <div className="bg-white rounded-xl shadow-md p-6">
+              {/* <div className="bg-white rounded-xl shadow-md p-6">
                 <h2 className="text-xl font-bold text-gray-800 mb-4">Cari Berita</h2>
                 <div className="relative">
                   <input 
@@ -187,7 +187,7 @@ const NewsPage: React.FC<NewsPageProps> = ({ allNews, categories, colorClasses }
                     </svg>
                   </button>
                 </div>
-              </div>
+              </div> */}
             </div>
             
             {/* Main Content */}
