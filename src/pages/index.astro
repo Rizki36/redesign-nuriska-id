@@ -51,22 +51,21 @@ const educationalPrograms = [
     
     <!-- Hero Section -->
     <section class="relative bg-green-900 text-white">
-      <!-- Hero content remains unchanged -->
       <div class="container mx-auto px-4">
         <div class="flex flex-col lg:flex-row">
           <!-- Left content -->
-          <div class="pt-16 pb-20 lg:py-24 lg:w-1/2 pr-2">
-            <div class="bg-green-700 text-white inline-block px-4 py-2 rounded-full text-sm mb-6">
+          <div class="pt-16 pb-20 lg:py-24 lg:w-1/2 pr-2 reveal-left">
+            <div class="bg-green-700 text-white inline-block px-4 py-2 rounded-full text-sm mb-6 reveal-element">
               Pondok Pesantren Nurul Islam
             </div>
-            <h1 class="text-4xl font-bold mb-6 leading-tight">
+            <h1 class="text-4xl font-bold mb-6 leading-tight reveal-element">
               Membentuk Generasi Qur'ani <span class="text-green-200">dengan Pendidikan Berkualitas</span>
             </h1>
-            <p class="text-lg lg:text-xl mb-8 text-gray-100 leading-relaxed max-w-xl">
+            <p class="text-lg lg:text-xl mb-8 text-gray-100 leading-relaxed max-w-xl reveal-element">
               Sejak tahun 2000, kami mendedikasikan diri untuk transformasi pendidikan Islam dengan inovasi, nilai, dan komitmen.
             </p>
-            <div class="flex flex-wrap gap-4">
-              <a href="/" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors">
+            <div class="flex flex-wrap gap-4 reveal-element">
+              <a href="/fasilitas" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium flex items-center gap-2 transition-colors">
                 Lihat Fasilitas
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -76,41 +75,41 @@ const educationalPrograms = [
           </div>
           
           <!-- Right image -->
-          <div class="lg:w-1/2 relative flex items-center justify-center mb-10 md:mb-0">
+          <div class="lg:w-1/2 relative flex items-center justify-center mb-10 md:mb-0 reveal-right">
             <img src="/images/hero-image.jpg" alt="Suasana Pondok Pesantren Nurul Islam" class="rounded-2xl shadow-2xl w-full h-auto">
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Quick Stats Section remains unchanged -->
+    <!-- Quick Stats Section -->
     <section class="py-16 bg-gray-50">
       <div class="container mx-auto px-4 lg:px-8">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="text-center">
-            <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2">25+</div>
+          <div class="text-center reveal-element">
+            <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2 counter" data-target="25">0</div>
             <div class="text-gray-600">Tahun Berdiri</div>
           </div>
-          <div class="text-center">
-            <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2">1500+</div>
+          <div class="text-center reveal-element" data-delay="150">
+            <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2 counter" data-target="1500">0</div>
             <div class="text-gray-600">Santri Aktif</div>
           </div>
-          <div class="text-center">
-            <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2">100+</div>
+          <div class="text-center reveal-element" data-delay="300">
+            <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2 counter" data-target="100">0</div>
             <div class="text-gray-600">Tenaga Pendidik</div>
           </div>
-          <div class="text-center">
-            <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2">6</div>
+          <div class="text-center reveal-element" data-delay="450">
+            <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2 counter" data-target="6">0</div>
             <div class="text-gray-600">Jenjang Pendidikan</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Educational Programs Section remains unchanged -->
+    <!-- Educational Programs Section -->
     <section class="py-20">
       <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-16">
+        <div class="text-center mb-16 reveal-element">
           <h2 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Program Pendidikan</h2>
           <p class="text-xl text-gray-600 max-w-3xl mx-auto">
             Kami menyediakan pendidikan berkualitas dari tingkat dasar hingga menengah atas dengan pendekatan islami
@@ -118,8 +117,8 @@ const educationalPrograms = [
         </div>
         
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-          {educationalPrograms.map((program) => (
-            <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 text-center border border-gray-100">
+          {educationalPrograms.map((program, index) => (
+            <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 p-6 text-center border border-gray-100 reveal-element" data-delay={index * 100}>
               <div class="text-4xl mb-4">{program.icon}</div>
               <h3 class="text-xl font-bold text-gray-800 mb-2">{program.name}</h3>
               <p class="text-gray-600 text-sm">{program.description}</p>
@@ -129,17 +128,17 @@ const educationalPrograms = [
       </div>
     </section>
 
-    <!-- Latest News - Updated to use content collection -->
+    <!-- Latest News Section -->
     <section class="py-20 bg-gray-50">
       <div class="container mx-auto px-4 lg:px-8">
-        <div class="text-center mb-16">
+        <div class="text-center mb-16 reveal-element">
           <h2 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Berita Terbaru</h2>
           <p class="text-xl text-gray-600">Informasi terkini seputar kegiatan dan prestasi pondok pesantren</p>
         </div>
         
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {latestNews.map((news) => (
-            <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+          {latestNews.map((news, index) => (
+            <article class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden reveal-element" data-delay={index * 200}>
               <img 
                 src={news.data.image} 
                 alt={news.data.title} 
@@ -163,7 +162,7 @@ const educationalPrograms = [
           ))}
         </div>
         
-        <div class="text-center mt-12">
+        <div class="text-center mt-12 reveal-element">
           <a href="/berita" class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300">
             Lihat Semua Berita
           </a>
@@ -174,7 +173,7 @@ const educationalPrograms = [
     <!-- Islamic Quote Section -->
     <section class="py-20 bg-green-700 text-white">
       <div class="container mx-auto px-4 lg:px-8 text-center">
-        <div class="max-w-4xl mx-auto">
+        <div class="max-w-4xl mx-auto reveal-scale">
           <div class="text-6xl mb-6">"</div>
           <blockquote class="text-2xl lg:text-3xl font-light mb-6 italic leading-relaxed">
             وَمَن يَتَّقِ اللَّهَ يَجْعَل لَّهُ مَخْرَجًا وَيَرْزُقْهُ مِنْ حَيْثُ لَا يَحْتَسِبُ
@@ -191,7 +190,7 @@ const educationalPrograms = [
     <section class="py-20">
       <div class="container mx-auto px-4 lg:px-8">
         <div class="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
+          <div class="reveal-left" data-delay="300">
             <h2 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-6">Tentang Kami</h2>
             <p class="text-lg text-gray-600 mb-6 leading-relaxed">
               Pondok Pesantren Nurul Islam adalah lembaga pendidikan Islam yang telah berdiri sejak tahun 2000. 
@@ -205,7 +204,7 @@ const educationalPrograms = [
               Pelajari Lebih Lanjut
             </a>
           </div>
-          <div>
+          <div class="reveal-right" data-delay="300">
             <img src="/images/kegiatan.jpg" alt="Kegiatan Santri" class="rounded-2xl shadow-lg w-full h-auto">
           </div>
         </div>
@@ -214,7 +213,7 @@ const educationalPrograms = [
 
     <!-- Contact CTA -->
     <section class="py-20 bg-gray-800 text-white">
-      <div class="container mx-auto px-4 lg:px-8 text-center">
+      <div class="container mx-auto px-4 lg:px-8 text-center reveal-element">
         <h2 class="text-3xl lg:text-4xl font-bold mb-6">Bergabunglah Bersama Kami</h2>
         <p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
           Mulai perjalanan pendidikan islami yang berkualitas. Hubungi kami untuk informasi lebih lanjut.
@@ -235,6 +234,7 @@ const educationalPrograms = [
 </html>
 
 <style>
+  /* Line clamp styles */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -248,4 +248,102 @@ const educationalPrograms = [
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
+  
+  /* Animation styles */
+  .reveal-element,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
+    opacity: 0;
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+  }
+  
+  .reveal-left {
+    transform: translateX(-50px);
+  }
+  
+  .reveal-right {
+    transform: translateX(50px);
+  }
+  
+  .reveal-scale {
+    transform: scale(0.9);
+  }
+  
+  .reveal-element.active,
+  .reveal-left.active,
+  .reveal-right.active,
+  .reveal-scale.active {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
 </style>
+
+<script>
+  // Intersection Observer for reveal animations
+  document.addEventListener('DOMContentLoaded', () => {
+    const revealElements = document.querySelectorAll('.reveal-element, .reveal-left, .reveal-right, .reveal-scale');
+    
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const element = entry.target;
+          // Get delay attribute or default to 0
+          const delay = Number.parseInt(element.getAttribute('data-delay') ||"0") ;
+          
+          // Add active class after the specified delay
+          setTimeout(() => {
+            element.classList.add('active');
+          }, delay);
+          
+          // Stop observing after animation
+          revealObserver.unobserve(element);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+    
+    revealElements.forEach(element => {
+      revealObserver.observe(element);
+    });
+    
+    // Counter animation
+    const counters = document.querySelectorAll('.counter');
+    
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const counter = entry.target;
+          const target = Number.parseInt(counter.getAttribute('data-target') || '0');
+          const duration = 2000; // ms
+          const increment = Math.ceil(target / (duration / 16)); // 60fps
+          
+          let current = 0;
+          const updateCounter = () => {
+            current += increment;
+            
+            if (current >= target) {
+              counter.textContent = target + '+';
+              clearInterval(timer);
+            } else {
+              counter.textContent = current.toString();
+            }
+          };
+          
+          const timer = setInterval(updateCounter, 16);
+          
+          // Stop observing after animation
+          counterObserver.unobserve(counter);
+        }
+      });
+    }, {
+      threshold: 0.5
+    });
+    
+    counters.forEach(counter => {
+      counterObserver.observe(counter);
+    });
+  });
+</script>
