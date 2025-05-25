@@ -461,6 +461,7 @@ const educationalPrograms = [
     
     leaves.forEach(leaf => {
       const rotation = Math.random() * 360;
+      // @ts-ignore
       leaf.style.setProperty('--rotation', `${rotation}deg`);
     });
   });
