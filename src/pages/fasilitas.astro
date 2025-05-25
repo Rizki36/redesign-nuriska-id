@@ -2,7 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, CONTACT_US_URL } from '../consts';
 import "../styles/global.css";
 
 const pageTitle = "Fasilitas | " + SITE_TITLE;
@@ -230,7 +230,7 @@ const facilitiesJson = JSON.stringify(facilities);
                 <a href="https://psb.nuriska.id/utama/daftar" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                   Daftar Sekarang
                 </a>
-                <a href="https://api.whatsapp.com/send?phone=6281939000818&text=Assalamualaikum+Mohon+Informasi+PSB+Pondok+Pesantren+Nurul+Islam&source=&data=" class="border border-green-600 text-green-600 hover:bg-green-50 px-6 py-3 rounded-lg font-medium transition-colors">
+                <a href={CONTACT_US_URL} class="border border-green-600 text-green-600 hover:bg-green-50 px-6 py-3 rounded-lg font-medium transition-colors">
                   Hubungi Kami
                 </a>
               </div>

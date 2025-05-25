@@ -2,7 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, CONTACT_US_URL} from '../consts';
 import { getCollection } from 'astro:content';
 import "../styles/global.css";
 
@@ -234,7 +234,7 @@ const educationalPrograms = [
           Mulai perjalanan pendidikan islami yang berkualitas. Hubungi kami untuk informasi lebih lanjut.
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="https://api.whatsapp.com/send?phone=6281939000818&text=Assalamualaikum+Mohon+Informasi+PSB+Pondok+Pesantren+Nurul+Islam&source=&data=" class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300">
+          <a href={CONTACT_US_URL} class="bg-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-300">
             Hubungi Kami
           </a>
           <a href="https://psb.nuriska.id/" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-gray-800 transition-colors duration-300">

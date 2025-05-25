@@ -1,4 +1,6 @@
 ---
+import { CONTACT_US_URL } from "../consts";
+
 ---
 
 <header class="w-full">
@@ -51,7 +53,7 @@
         <a href="/" class="text-green-800 font-medium hover:text-green-600">Beranda</a>
         <a href="/tentang" class="text-green-800 font-medium hover:text-green-600">Tentang</a>
         <a href="/berita" class="text-green-800 font-medium hover:text-green-600">Berita</a>
-        <a href="https://api.whatsapp.com/send?phone=6281939000818&text=Assalamualaikum+Mohon+Informasi+PSB+Pondok+Pesantren+Nurul+Islam&source=&data=" class="text-green-800 font-medium hover:text-green-600">Kontak</a>
+        <a href={CONTACT_US_URL} class="text-green-800 font-medium hover:text-green-600">Kontak</a>
         <a href="https://psb.nuriska.id/utama/daftar" class="bg-green-700 !text-white px-5 py-2 rounded-lg font-medium hover:bg-green-800 transition-colors duration-300">Daftar</a>
       </div>
     </div>

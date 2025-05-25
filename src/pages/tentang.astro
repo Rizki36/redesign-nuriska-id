@@ -2,7 +2,7 @@
 import BaseHead from '../components/BaseHead.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { SITE_TITLE } from '../consts';
+import { SITE_TITLE, CONTACT_US_URL } from '../consts';
 import "../styles/global.css";
 
 const pageTitle = "Tentang Kami | " + SITE_TITLE;
@@ -179,7 +179,7 @@ const pageDescription = "Mengenal lebih dekat Pondok Pesantren Nurul Islam, visi
           Jadilah bagian dari keluarga besar Pondok Pesantren Nurul Islam dan mulailah perjalanan pendidikan Islami yang berkualitas
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="https://api.whatsapp.com/send?phone=6281939000818&text=Assalamualaikum+Mohon+Informasi+PSB+Pondok+Pesantren+Nurul+Islam&source=&data=" class="bg-green-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-800 transition-colors">
+          <a href={CONTACT_US_URL} class="bg-green-700 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-800 transition-colors">
             Hubungi Kami
           </a>
           <a href="https://psb.nuriska.id/utama/daftar" class="border-2 border-green-700 text-green-700 px-6 py-3 rounded-lg font-medium hover:bg-green-700 hover:text-white transition-colors">
